@@ -1,0 +1,65 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Wordcloud</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="js/d3.js"></script>
+<script type="text/javascript" src="js/d3.layout.cloud.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+</head>
+<body onload="javascript: loaded();">
+<script language="JavaScript">
+function doit()
+{
+    var xmlHttp = null;
+
+    xmlHttp = new XMLHttpRequest();
+    var comment = document.getElementById('comment').value;
+    //var comment="gugus";
+    xmlHttp.open( "GET", "http://javacloudant.mybluemix.net/SimpleServlet?comment="+comment, false );
+    xmlHttp.send( null );
+
+
+window.document.getElementById('meiniframe').src = window.document.getElementById('meiniframe').src;
+
+
+
+    return xmlHttp.responseText;
+}
+
+
+
+var words = [{
+"text": "sexy",
+"size": 1
+}, {
+"text": "tagclouds",
+"size": 7
+}, {
+"text": "dynamisch",
+"size": 1
+}, {
+"text": "seite",
+"size": 5
+}];
+
+
+function loaded() {
+d3.layout.cloud()
+.size(size)
+.words(words)
+.font("Impact")
+.fontSize(function(d) { return fontSize(+d.size); })
+.rotate(function() { return ~~(Math.random() * 5) * 30 - 60; })
+.on("end", draw)
+.start();
+}
+</script>
+<form>
+<input type="text"  id="comment"><input type="submit" onclick="doit()">
+</form>
+<!-- <iframe src="http://javacloudant.mybluemix.net/examples/wordcloud.html" height="500" width="300" id="meiniframe">Alternativtext</iframe> -->
+</body>
+</html>
+
+

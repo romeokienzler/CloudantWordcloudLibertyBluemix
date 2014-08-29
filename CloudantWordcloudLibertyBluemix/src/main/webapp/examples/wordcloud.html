@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body onload="JavaScript: AutoRefresh(6000);">
+<script src="../lib/d3/d3.js"></script>
+<script src="../d3.layout.cloud.js"></script>
+<script>
+function AutoRefresh(interval) {
+	setTimeout("location.reload(true);",interval);
+}
+
+    var xmlHttp = null;
+try {
+  var fill = d3.scale.category20();
+
+xmlHttp = new XMLHttpRequest();
+
+    xmlHttp.open( "GET", "http://javacloudant.mybluemix.net/WordCloud", false );
+//xmlHttp.open( "GET", "file:///home/romeokienzler/workspace/sample/src/main/webapp/examples/WordCloud", false );
+    xmlHttp.send( null );
+var words = JSON.parse(xmlHttp.responseText);
+  d3.layout.cloud().size([1500, 800])
+      .words(words)
+      .padding(5)
+      //.rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .font("Impact")
+      .fontSize(function(d) { return Math.min(d.size*10,200); })
+      .on("end", draw)
+      .start();
+ } catch(e) {alert(e);}
+
+  function draw(words) {
+    d3.select("body").append("svg")
+        .attr("width", 1800)
+        .attr("height", 800)
+      .append("g")
+        .attr("transform", "translate(900,400)")
+      .selectAll("text")
+        .data(words)
+      .enter().append("text")
+        .style("font-size", function(d) { return d.size + "px"; })
+        .style("font-family", "Impact")
+        .style("fill", function(d, i) { return fill(i); })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function(d) { return d.text; });
+  }
+</script>
+</body>
+</html>
